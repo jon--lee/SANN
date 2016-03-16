@@ -35,7 +35,7 @@ class Arch():
         self.filters = params['filters']
         self.fc_dim = params['fc_dim']
         self.optimizer = params['optimizer']
-        self.loss = -1
+        self._loss = -1
 
 
     def __iter__(self):
@@ -59,15 +59,22 @@ class Arch():
             'optimizer': self.optimizer
         }
 
+    def __str__(self):
+        return str(self.todict())
+
+    def _repr__(self):
+        return str(self)
+
     def loss(self):
-        if self.loss > -1:
-            return self.loss
-        return _compute_loss()
+        if self._loss > -1:
+            return self._loss
+        return self._compute_loss()
 
     def _compute_loss(self):
         # TODO: actually (train and) compute loss by constructing graph with net
-        return self.lr + self.mo + self.weight_init + self.bias_init + self.convs + self.fcs
-
+        self._loss = self.lr + self.mo + self.weight_init + self.bias_init + self.convs + self.fcs
+        return self._loss
+    
     @staticmethod
     def make_arch(lst):
         params = { key: val for key, val in zip(Arch.keys, lst) }

@@ -12,15 +12,17 @@ from arch import Arch
 from inputdata import AMTData
 import itertools
 import numpy as np
+import copy
 import random
 import tensorflow as tf
 
 class SANN():
     
-    def __init__(self, initial_arch, T = 25, dT = 1):
+    def __init__(self, initial_arch, T = 100, dT = 1):
         self.current_arch = initial_arch
         self.T = 1
         self.dT = float(dT)/float(T)
+        self.max_hd = 4
 
     @staticmethod
     def prob_function(e, eprime, T):
@@ -34,19 +36,18 @@ class SANN():
 
 
     def get_nearest_neighbors(self):
-        neighbor_dict = _rand_param()
-        
-        if SANN.hamming_dist(self.current_arch, neighbor) == 0:
-            print "hamming distance conflict"
-            return get_nearest_neighbors()
+        neighbor_dict = self._rand_param()
+        neighbor = Arch(neighbor_dict)
+        hd = SANN.hamming_dist(self.current_arch, neighbor)
+        if hd == 0 or hd > self.max_hd:
+            return self.get_nearest_neighbors()
         else:
-            print "selected neighbor is " + str(SANN.hamming_dist(self.current_arch, neighbor)) + " hamming distance"
             return [neighbor]
 
 
     def _rand_param(self):
-        neighbor_dict = {}
         curr_dict = self.current_arch.todict()
+        neighbor_dict = copy.copy(curr_dict)
         for key, options in Arch.possible_values.iteritems():
             if key == 'channels' or key == 'filters' or key == 'fc_dim':
                 continue
@@ -54,35 +55,43 @@ class SANN():
                 choice = random.choice(Arch.possible_values[key])
                 
                 if key == 'convs':
-                    neighbor_dict['channels'] = _rand_subset(Arch.possible_values['channels'], choice)
-                    neighbor_dict['filters'] = _rand_subset(Arch.possible_values['filters'], choice)
+                    neighbor_dict['channels'] = SANN._rand_subset(Arch.possible_values['channels'], choice)
+                    neighbor_dict['filters'] = SANN._rand_subset(Arch.possible_values['filters'], choice)
                 elif key == 'fcs':
-                    neighbor_dict['fc_dim'] = _rand_subset(Arch.possible_values['fc_dim'], choice)
+                    neighbor_dict['fc_dim'] = SANN._rand_subset(Arch.possible_values['fc_dim'], choice)
                 neighbor_dict[key] = choice
             else:
                 neighbor_dict[key] = curr_dict[key]
+
         return neighbor_dict
 
-
-        def _rand_subset(st, n):
-            st = list(st)
-            subset = []
-            for i in range(n):
-                choice = random.choice(st)
-                subset.append(choice)
-                st.remove(choice)
-            return subset
+    @staticmethod
+    def _rand_subset(st, n):
+        st = list(st)
+        subset = []
+        for i in range(n):
+            choice = random.choice(st)
+            subset.append(choice)
+            st.remove(choice)
+        return subset
 
 
     def iterate(self):
         curr_loss = self.current_arch.loss()
-        neighbors = get_nearest_neighbors()
-        arch_prime = choose_neighbor(neighbors)
+        neighbors = self.get_nearest_neighbors()
+        arch_prime = self.choose_neighbor(neighbors)
         loss_prime = arch_prime.loss()
+    
+        print loss_prime 
 
-        if prob_function(curr_loss, loss_prime, self.T) > random.random():
+        prob = self.prob_function(curr_loss, loss_prime, self.T)
+        if prob > random.random():
+            print "choosing prime, prob: " + str(prob)            
             self.current_arch = arch_prime
-        
+            self.T = max(self.T - self.dT, 0.0)
+        else:
+            a = 1
+            print "prob: " + str(prob)
         
     @staticmethod
     def hamming_dist(arch1, arch2):
@@ -96,7 +105,11 @@ class SANN():
     
 if __name__ == '__main__':
     init_arch = Arch.make_arch([.003, .3, .05, .05, 2, 2, [5, 3], [11, 5], [512, 256], tf.train.MomentumOptimizer])
-    
+    s = SANN(init_arch)
+    print "initial: " + str(s.current_arch.loss())
+    for i in range(100):
+        s.iterate()
+    print "final: " + str(s.current_arch.loss())
     """g = tf.Graph()
     with g.as_default():
         net = ControlNet(init_arch, g);
