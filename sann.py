@@ -21,7 +21,7 @@ class SANN():
     def __init__(self, initial_arch, T = 100, dT = 1):
         self.current_arch = initial_arch
         self.T = 1
-        self.dT = float(dT)/float(T)
+        self.dT = 1/float(T)
         self.max_hd = 4
 
     @staticmethod
@@ -82,17 +82,14 @@ class SANN():
         arch_prime = self.choose_neighbor(neighbors)
         loss_prime = arch_prime.loss()
     
-        print loss_prime 
 
         prob = self.prob_function(curr_loss, loss_prime, self.T)
         if prob > random.random():
-            print "choosing prime, prob: " + str(prob)            
             self.current_arch = arch_prime
-            self.T = max(self.T - self.dT, 0.0)
         else:
             a = 1
-            print "prob: " + str(prob)
-        
+        self.T = max(self.T - self.dT, 1e-9)
+    
     @staticmethod
     def hamming_dist(arch1, arch2):
         s = 0
@@ -105,9 +102,9 @@ class SANN():
     
 if __name__ == '__main__':
     init_arch = Arch.make_arch([.003, .3, .05, .05, 2, 2, [5, 3], [11, 5], [512, 256], tf.train.MomentumOptimizer])
-    s = SANN(init_arch)
-    print "initial: " + str(s.current_arch.loss())
-    for i in range(100):
+    n = 1000
+    s = SANN(init_arch, n)
+    for i in range(n):
         s.iterate()
     print "final: " + str(s.current_arch.loss())
     """g = tf.Graph()
