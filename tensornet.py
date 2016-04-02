@@ -24,12 +24,6 @@ import datetime
 import inputdata
 import logging
 import numpy as np
-try:
-    import options
-except:
-    options = None
-    pass
-
 import os
 
 class TensorNet():

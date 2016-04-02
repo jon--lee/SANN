@@ -2,3 +2,4 @@
 *.swp
 .idea/
 experiments.py
+MNIST_data/

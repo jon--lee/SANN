@@ -18,11 +18,14 @@ import tensorflow as tf
 
 class SANN():
     
-    def __init__(self, initial_arch, T = 100, dT = 1):
+    def __init__(self, initial_arch, T = 100):
         self.current_arch = initial_arch
+        self.iterations = T
         self.T = 1
         self.dT = 1/float(T)
         self.max_hd = 4
+        self.best = initial_arch
+
 
     @staticmethod
     def prob_function(e, eprime, T):
@@ -30,6 +33,7 @@ class SANN():
             return 1
         else:
             return np.exp(-(eprime - e)/T)
+
 
     def choose_neighbor(self, neighbors):
         return random.choice(neighbors)
@@ -65,6 +69,7 @@ class SANN():
 
         return neighbor_dict
 
+
     @staticmethod
     def _rand_subset(st, n):
         st = list(st)
@@ -81,15 +86,21 @@ class SANN():
         neighbors = self.get_nearest_neighbors()
         arch_prime = self.choose_neighbor(neighbors)
         loss_prime = arch_prime.loss()
-    
 
         prob = self.prob_function(curr_loss, loss_prime, self.T)
         if prob > random.random():
             self.current_arch = arch_prime
-        else:
-            a = 1
         self.T = max(self.T - self.dT, 1e-9)
+        if self.current_arch.loss() < self.best.loss():
+            self.best = self.current_arch
     
+
+    def run(self):
+        self.best = self.current_arch
+        for _ in range(self.iterations):
+            self.iterate()
+
+
     @staticmethod
     def hamming_dist(arch1, arch2):
         s = 0
@@ -102,11 +113,23 @@ class SANN():
     
 if __name__ == '__main__':
     init_arch = Arch.make_arch([.003, .3, .05, .05, 2, 2, [5, 3], [11, 5], [512, 256], tf.train.MomentumOptimizer])
-    n = 1000
-    s = SANN(init_arch, n)
-    for i in range(n):
-        s.iterate()
-    print "final: " + str(s.current_arch.loss())
+    
+    
+    
+    g = tf.Graph()
+    with g.as_default():
+        net = ControlNet(init_arch, g)
+        net.optimize()
+    
+    
+    
+    
+    
+    #n = 1000
+    #s = SANN(init_arch, n)
+    #for i in range(n):
+    #    s.iterate()
+    print "final: " + str(s.best.loss())
     """g = tf.Graph()
     with g.as_default():
         net = ControlNet(init_arch, g);

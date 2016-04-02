@@ -3,6 +3,9 @@ import numpy as np
 import tensorflow as tf
 import cv2
 
+
+
+
 class InputData():
 
     def __init__(self, train_path, test_path):
@@ -79,6 +82,33 @@ def im2tensor(im,channels=1):
         zeros[:,:,i] = im[:,:,i] / 255.0
         #zeros[:,:,i] = im[:,:,i]
     return zeros
+
+
+class MNISTData():
+    def __init__(self, train_path, validation_path, test_path)):
+        self.train_tups = parse(train_tups)
+        self.valid_tups = parse(valid_tups)
+        self.test_tups = parse(test_tups)
+        self.i = 0
+        
+        random.shuffle(self.train_tups)
+        random.shuffle(self.valid_tups)
+        random.shuffle(self.test_tups)
+
+    def next_train_batch(self, n):
+        """
+        Read into memory on request
+        :param n: number of examples to return in batch
+        :return: tuple with images in [0] and labels in [1]
+        """
+        if self.i + n > len(self.train_tups):
+            self.i = 0
+            random.shuffle(self.train_tups)
+        batch_tups = self.trian_tups[self.i:n+self.i]
+        features = []
+        outputs = []
+        for path, labels in batch_tups:
+
 
 
 class AMTData(InputData):

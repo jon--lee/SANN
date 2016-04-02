@@ -72,7 +72,12 @@ class Arch():
 
     def _compute_loss(self):
         # TODO: actually (train and) compute loss by constructing graph with net
-        self._loss = self.lr + self.mo + self.weight_init + self.bias_init + self.convs + self.fcs
+        g = tf.Graph()
+        with g.as_default():
+            net = ControlNet(self.current_arch, g)
+            net.train()
+            
+        self._loss = (50*self.lr)**3 + (50*self.mo)**2 + (10*self.weight_init)**2 + (10*self.bias_init)**4 + (self.convs)**5 + (self.fcs)**2
         return self._loss
     
     @staticmethod
