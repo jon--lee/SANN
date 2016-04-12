@@ -1,0 +1,2 @@
+model_checkpoint_path: "models/genericnet_04-12-2016_15h08m56s.ckpt"
+all_model_checkpoint_paths: "models/genericnet_04-12-2016_15h08m56s.ckpt"

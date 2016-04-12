@@ -8,6 +8,8 @@
 
 from tensornet import TensorNet
 from controlnet import ControlNet
+from mnistnet import MNISTNet
+from inputdata import MNISTData
 from arch import Arch
 from inputdata import AMTData
 import itertools
@@ -82,7 +84,9 @@ class SANN():
 
 
     def iterate(self):
+        print "T = " + str(self.T)
         curr_loss = self.current_arch.loss()
+        print self.current_arch
         neighbors = self.get_nearest_neighbors()
         arch_prime = self.choose_neighbor(neighbors)
         loss_prime = arch_prime.loss()
@@ -112,15 +116,17 @@ class SANN():
     
     
 if __name__ == '__main__':
-    init_arch = Arch.make_arch([.003, .3, .05, .05, 2, 2, [5, 3], [11, 5], [512, 256], tf.train.MomentumOptimizer])
-    
-    
-    
+    good_params = {'convs': 2, 'channels': [4, 3], 'weight_init': 0.5, 'fcs': 3, 'lr': 0.006, 'bias_init': 0.1, 'filters': [11, 7], 'optimizer': tf.train.AdagradOptimizer, 'mo': 0.9, 'fc_dim': [128, 256, 64]}
+    #init_arch = Arch.make_arch([1e-4, .3, .05, .05, 2, 1, [32, 64], [5, 5], [512], tf.train.AdamOptimizer])
+    init_arch = Arch(good_params)
     g = tf.Graph()
+    #data = AMTData('data/train.txt', 'data/test.txt', channels=3)
+    data = MNISTData() 
     with g.as_default():
-        net = ControlNet(init_arch, g)
-        net.optimize()
-    
+        net = MNISTNet(init_arch, g)
+        loss, acc, _ = net.optimize(500, data, batch_size=100)
+        print "Loss: " + str(loss)
+        print "Accuracy: " + str(acc)
     
     
     
@@ -129,7 +135,6 @@ if __name__ == '__main__':
     #s = SANN(init_arch, n)
     #for i in range(n):
     #    s.iterate()
-    print "final: " + str(s.best.loss())
     """g = tf.Graph()
     with g.as_default():
         net = ControlNet(init_arch, g);

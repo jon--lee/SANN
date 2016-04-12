@@ -4,7 +4,8 @@
 """
 import tensorflow as tf
 from controlnet import ControlNet
-
+from inputdata import MNISTData
+from mnistnet import MNISTNet
 class Arch():
 
     keys = ['lr', 'mo', 'weight_init', 'bias_init', 'convs',
@@ -73,11 +74,14 @@ class Arch():
     def _compute_loss(self):
         # TODO: actually (train and) compute loss by constructing graph with net
         g = tf.Graph()
+        data = MNISTData()
         with g.as_default():
-            net = ControlNet(self.current_arch, g)
-            net.train()
+            net = MNISTNet(self, g)
+            loss, acc, path = net.optimize(250, data, batch_size=100, save=False)
             
-        self._loss = (50*self.lr)**3 + (50*self.mo)**2 + (10*self.weight_init)**2 + (10*self.bias_init)**4 + (self.convs)**5 + (self.fcs)**2
+        self._loss = loss
+        print "Computed loss: " + str(self._loss)
+        print "Accuracy: " + str(acc)
         return self._loss
     
     @staticmethod

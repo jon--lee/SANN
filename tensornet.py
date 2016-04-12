@@ -25,7 +25,7 @@ import inputdata
 import logging
 import numpy as np
 import os
-
+options = None
 class TensorNet():
 
     def __init__(self):
@@ -37,7 +37,7 @@ class TensorNet():
         saver = tf.train.Saver()
         if not save_path:
             model_name = self.name + "_" + datetime.datetime.now().strftime("%m-%d-%Y_%Hh%Mm%Ss") + ".ckpt"
-            save_path = '/media/1tb/Izzy/nets/' + model_name
+            save_path = 'models/' + model_name
         save_path = saver.save(sess, save_path)
         self.log( "Saved model to " + save_path )
         self.recent = save_path
@@ -75,10 +75,7 @@ class TensorNet():
             sess = tf.Session()
             sess.run(tf.initialize_all_variables())
             
-        if options:
-            self.log_path = options.Options.tf_dir + self.dir + 'train.log'
-        else:
-            self.log_path = self.dir + 'train.log'
+        self.log_path = self.dir + 'train.log'
         #logging.basicConfig(filename=log_path, level=logging.DEBUG)
         
         try:
@@ -107,10 +104,10 @@ class TensorNet():
             dir, old_name = os.path.split(path)
             dir = dir + '/'
         else:
-            dir = options.Options.tf_dir + self.dir
+            dir = 'models/'
         new_name = self.name + "_" + datetime.datetime.now().strftime("%m-%d-%Y_%Hh%Mm%Ss") + ".ckpt"
         if save:
-            save_path = self.save(sess, save_path='/media/1tb/Izzy/nets/' + new_name)
+            save_path = self.save(sess, save_path='models/' + new_name)
         else:
             save_path = None
         sess.close()

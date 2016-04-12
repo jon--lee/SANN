@@ -3,3 +3,6 @@
 .idea/
 experiments.py
 MNIST_data/
+*.gz
+*.ckpt
+*.jpg

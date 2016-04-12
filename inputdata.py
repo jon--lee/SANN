@@ -3,6 +3,8 @@ import numpy as np
 import tensorflow as tf
 import cv2
 
+from tensorflow.examples.tutorials.mnist import input_data
+
 
 
 
@@ -85,29 +87,27 @@ def im2tensor(im,channels=1):
 
 
 class MNISTData():
-    def __init__(self, train_path, validation_path, test_path)):
-        self.train_tups = parse(train_tups)
-        self.valid_tups = parse(valid_tups)
-        self.test_tups = parse(test_tups)
-        self.i = 0
-        
-        random.shuffle(self.train_tups)
-        random.shuffle(self.valid_tups)
-        random.shuffle(self.test_tups)
-
+    def __init__(self):
+        self.mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
+    
     def next_train_batch(self, n):
-        """
-        Read into memory on request
-        :param n: number of examples to return in batch
-        :return: tuple with images in [0] and labels in [1]
-        """
-        if self.i + n > len(self.train_tups):
-            self.i = 0
-            random.shuffle(self.train_tups)
-        batch_tups = self.trian_tups[self.i:n+self.i]
-        features = []
-        outputs = []
-        for path, labels in batch_tups:
+        batch = self.mnist.train.next_batch(n)
+        inputs = batch[0]
+        batch = (np.reshape(inputs, (n, 28, 28, 1)), batch[1])
+        return batch
+
+
+    def next_validation_batch(self):
+        batch = self.mnist.validation.next_batch(100)
+        inputs = batch[0]
+        batch = (np.reshape(inputs, (100, 28, 28, 1)), batch[1])
+        return batch    
+
+    def next_test_batch(self):
+        batch = self.mnist.test.next_batch(300)
+        inputs = batch[0]
+        batch = (np.reshape(inputs, (300, 28, 28, 1)), batch[1])
+        return batch    
 
 
 

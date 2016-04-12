@@ -1,4 +1,5 @@
 from tensornet import TensorNet
+
 import tensorflow as tf
 """
     All control nets nets will have at least one conv leading and four output control nodes
@@ -15,6 +16,8 @@ class GenericNet(TensorNet):
     input_channels = 0
     
     def __init__(self, arch, graph):
+        self.name = 'genericnet'
+        self.dir = 'data/'
         self.arch = arch
         self.graph = graph 
         self._generate_net()
@@ -24,7 +27,14 @@ class GenericNet(TensorNet):
         raise NotImplementedError
 
     def _generate_net(self):
-        raise NotImplementedError
+        self._append_input()
+
+        for i in range(self.arch.convs):
+            self._add_conv(self.arch.filters[i], self.arch.channels[i])
+        for i in range(self.arch.fcs):
+            self._add_fc(self.arch.fc_dim[i])
+
+        self._append_output()
         
         
     def _add_conv(self, filter_size, depth):
@@ -39,8 +49,8 @@ class GenericNet(TensorNet):
         num_nodes = abs(TensorNet.reduce_shape(self.last_layer.get_shape()))
         flattened = tf.reshape(self.last_layer, [-1, num_nodes])
         
-        w_fc = self.weight_variable([num_nodes, num_fc_nodes])
-        b_fc = self.bias_variable([num_fc_nodes])
+        w_fc = self._weight_variable([num_nodes, num_fc_nodes])
+        b_fc = self._bias_variable([num_fc_nodes])
 
         h_fc = tf.nn.relu(tf.matmul(flattened, w_fc) + b_fc)
         self.last_layer = h_fc
@@ -57,11 +67,11 @@ class GenericNet(TensorNet):
         else:
             return lambda x, y: optimizer(x)
 
-    def weight_variable(self, shape):
+    def _weight_variable(self, shape):
         return TensorNet.weight_variable(self, shape, self.arch.weight_init)
 
 
-    def bias_variable(self, shape):
+    def _bias_variable(self, shape):
         return TensorNet.bias_variable(self, shape, self.arch.bias_init)
         
 
