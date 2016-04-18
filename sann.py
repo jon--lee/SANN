@@ -24,7 +24,7 @@ class SANN():
         self.current_arch = initial_arch
         self.iterations = T
         self.T = 5
-        self.dT = T/float(T)
+        self.dT = self.T/float(T)
         self.max_hd = 4
         self.best = initial_arch
 
