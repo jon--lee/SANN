@@ -88,6 +88,12 @@ class SANN():
         print "T = " + str(self.T)
         curr_loss = self.current_arch.loss()
         print self.current_arch
+        
+        self.log_loss()
+        self.log_acc()
+        self.log_best_loss()
+        self.log_best_acc()
+
         neighbors = self.get_nearest_neighbors()
         arch_prime = self.choose_neighbor(neighbors)
         loss_prime = arch_prime.loss()
@@ -98,10 +104,6 @@ class SANN():
         self.T = max(self.T - self.dT, 1e-9)
         if self.current_arch.loss() < self.best.loss():
             self.best = self.current_arch
-        self.log_loss()
-        self.log_acc()
-        self.log_best_loss()
-        self.log_best_acc()
         print "\n\n\n\n"
 
     def run(self):
