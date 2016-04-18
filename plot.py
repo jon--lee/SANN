@@ -7,12 +7,24 @@ i = 0
 iterations = []
 bls = []
 tls = []
+prev_bl = 2.3
+prev_tl = 2.3
 for bl, tl in zip(blf, tlf):
     bl = float(bl)
     tl = float(tl)
     iterations.append(i)
-    bls.append(bl)
-    tls.append(tl)
+    if bl < 1e50:
+        bls.append(bl)
+        prev_bl = bl
+    else:
+        bls.append(prev_bl)
+    if tl < 1e50:
+        tls.append(tl)
+        prev_tl = tl
+    else:
+        tls.append(prev_tl)
+    
+
     i += 1
 blf.close()
 tlf.close()
