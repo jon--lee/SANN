@@ -48,6 +48,7 @@ class SANN():
         if hd == 0 or hd > self.max_hd:
             return self.get_nearest_neighbors()
         else:
+            print "hamming distance is: " + str(d)
             return [neighbor]
 
 

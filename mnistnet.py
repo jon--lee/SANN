@@ -38,7 +38,8 @@ class MNISTNet(GenericNet):
             sess = self.load(var_path=path)
         else:
             print "Initializing new variables..."
-            sess = tf.Session()
+            NUM_CORES = 1
+            sess = tf.Session(config=tf.ConfigProto(inter_op_parallelism_threads=NUM_CORES, intra_op_parallelism_threads=NUM_CORES))
             sess.run(tf.initialize_all_variables())
             
         self.log_path = self.dir + 'train.log'

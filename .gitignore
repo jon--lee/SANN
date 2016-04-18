@@ -6,3 +6,4 @@ MNIST_data/
 *.gz
 *.ckpt
 *.jpg
+*.log
