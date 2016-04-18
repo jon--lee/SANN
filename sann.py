@@ -98,7 +98,11 @@ class SANN():
         self.T = max(self.T - self.dT, 1e-9)
         if self.current_arch.loss() < self.best.loss():
             self.best = self.current_arch
-    
+        self.log_loss()
+        self.log_acc()
+        self.log_best_loss()
+        self.log_best_acc()
+        print "\n\n\n\n"
 
     def run(self):
         self.best = self.current_arch
@@ -113,6 +117,34 @@ class SANN():
             if not el1 == el2:
                 s += 1
         return s
+
+
+    def log_loss(self):
+        path = "test_loss.log"
+        f = open(path, 'a+')
+        f.write(str(self.current_arch.loss()) + "\n")
+        return 
+
+    def log_acc(self):
+        path = "test_acc.log"
+        f = open(path, 'a+')
+        f.write(str(self.current_arch.acc()) + "\n")
+        return
+
+    def log_best_acc(self):
+        path = "best_acc.log"
+        f = open(path, 'a+')
+        f.write(str(self.best.acc()) + "\n")
+        return 
+
+    def log_best_loss(self):
+        path = "best_loss.log"
+        f = open(path, 'a+')
+        f.write(str(self.best.loss()) + "\n")
+        return        
+        return
+    
+
 
     
     

@@ -69,7 +69,7 @@ class Arch():
     def loss(self):
         if self._loss > -1:
             return self._loss
-        return self._compute_loss()
+        return self._compute_loss()[0]
 
     def _compute_loss(self):
         # TODO: actually (train and) compute loss by constructing graph with net
@@ -80,10 +80,16 @@ class Arch():
             loss, acc, path = net.optimize(500, data, batch_size=100, save=False)
             
         self._loss = loss
+        self._acc = acc
         print "Computed loss: " + str(self._loss)
         print "Accuracy: " + str(acc)
-        return self._loss
+        return self._loss, self._acc
     
+    def acc(self):
+        self.loss()
+        return self._acc
+        
+
     @staticmethod
     def make_arch(lst):
         params = { key: val for key, val in zip(Arch.keys, lst) }

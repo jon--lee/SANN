@@ -89,10 +89,10 @@ if __name__ == '__main__':
         s.run()
         #hc.run()
 
-        print "final sann: " + str(s.best.loss())
-        print "final sann: " + str(s.best)
+        print "\n\nFinal SANN Loss: " + str(s.best.loss())
+        print "Final SANN Accuracy: " + str(s.best.acc())
+        print "Final SANN: " + str(s.best)
         #print "final hc: " + str(hc.best.loss())
 
-        print ""
 
     

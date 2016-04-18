@@ -33,7 +33,7 @@ class MNISTNet(GenericNet):
         
 
 
-    def optimize(self, iterations, data, path=None, batch_size=100, test_print=20, save=True):
+    def optimize(self, iterations, data, path=None, batch_size=100, test_print=40, save=True):
         if path:
             sess = self.load(var_path=path)
         else:
@@ -52,7 +52,7 @@ class MNISTNet(GenericNet):
                     ims, labels = batch
 
                     feed_dict = { self.x: ims, self.y_: labels }
-                    if i % 3 == 0:
+                    if i % 20 == 0:
                         batch_loss = self.loss.eval(feed_dict=feed_dict) / batch_size
                         self.log("[ Iteration " + str(i) + " ] Training loss: " + str(batch_loss))
                     if i % test_print == 0:
