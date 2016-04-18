@@ -77,7 +77,7 @@ class Arch():
         data = MNISTData()
         with g.as_default():
             net = MNISTNet(self, g)
-            loss, acc, path = net.optimize(500, data, batch_size=100, save=False)
+            loss, acc, path = net.optimize(20000, data, batch_size=100, save=False)
             
         self._loss = loss
         self._acc = acc
