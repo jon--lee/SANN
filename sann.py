@@ -100,6 +100,8 @@ class SANN():
 
         prob = self.prob_function(curr_loss, loss_prime, self.T)
         if prob > random.random():
+            if prob < 1.0:
+                print "JUMPING ANYWAY"
             self.current_arch = arch_prime
         self.T = max(self.T - self.dT, 1e-9)
         if self.current_arch.loss() < self.best.loss():
