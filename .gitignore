@@ -1,7 +1,6 @@
 *pyc
 *.swp
 .idea/
-experiments.py
 MNIST_data/
 *.gz
 *.ckpt
