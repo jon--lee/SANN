@@ -23,7 +23,7 @@ class SANN():
     def __init__(self, initial_arch, T = 100):
         self.current_arch = initial_arch
         self.iterations = T
-        self.T = 5
+        self.T = .5
         self.dT = self.T/float(T)
         self.max_hd = 4
         self.best = initial_arch

@@ -22,7 +22,7 @@ class Arch():
         "channels": sorted([2, 3, 4, 5, 6], reverse=True),
         "filters": sorted([3, 5, 7, 11], reverse=True),
         "fc_dim": sorted([32, 64, 128, 256, 512], reverse=True),
-        "optimizer": [tf.train.MomentumOptimizer, tf.train.AdagradOptimizer, tf.train.GradientDescentOptimizer]
+        "optimizer": [tf.train.MomentumOptimizer, tf.train.AdagradOptimizer, tf.train.GradientDescentOptimizer, tf.train.AdamOptimizer]
     }
 
     def __init__(self, params):
