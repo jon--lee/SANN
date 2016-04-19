@@ -87,8 +87,6 @@ if __name__ == '__main__':
                 'optimizer': tf.train.AdamOptimizer, 
                 'mo': 0.5, 'fc_dim': [512]
         }
-
-                }
         init_arch = Arch(init_params)
         print "initial loss: " + str(init_arch.loss())
 
