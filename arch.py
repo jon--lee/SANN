@@ -11,6 +11,7 @@ class Arch():
     keys = ['lr', 'mo', 'weight_init', 'bias_init', 'convs',
             'fcs', 'channels', 'filters', 'fc_dim', 'optimizer']
 
+    
     possible_values = {
         "lr": sorted([.0009, .003, .006, .009, .03, .06, .09]),
         "mo": sorted([.09, .5, .9]),
