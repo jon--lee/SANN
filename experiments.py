@@ -73,24 +73,24 @@ if __name__ == '__main__':
     for _ in range(1):
         #init_arch = random.choice(archs)
         #init_params = get_random_arch()
-        init_params = {
+        """init_params = {
                 'convs': 2, 'channels': [3, 5], 
                 'weight_init': 0.5, 'fcs': 3, 'lr': 0.006,
                 'bias_init': 0.1, 'filters': [3, 11], 
                 'optimizer': tf.train.AdagradOptimizer, 
                 'mo': 0.5, 'fc_dim': [128, 256, 64]
-        }
-        """init_params = {
+        }"""
+        init_params = {
                 'convs': 2, 'channels': [32, 64], 
-                'weight_init': 0.1, 'fcs': 1, 'lr': 0.0009,
+                'weight_init': 0.1, 'fcs': 1, 'lr': 0.0001,
                 'bias_init': 0.1, 'filters': [5, 5], 
                 'optimizer': tf.train.AdamOptimizer, 
                 'mo': 0.5, 'fc_dim': [512]
-        }"""
+        }
         init_arch = Arch(init_params)
         print "initial loss: " + str(init_arch.loss())
 
-        s = SANN(init_arch, T = 50)
+        s = SANN(init_arch, T = 100)
         #hc = HillClimber(init_arch, 80)
         
         s.run()
