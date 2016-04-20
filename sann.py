@@ -25,7 +25,7 @@ class SANN():
         self.iterations = T
         self.T = .75
         self.dT = self.T/float(T)
-        self.max_hd = 1
+        self.max_hd = 2
         self.best = initial_arch
 
 
@@ -88,7 +88,7 @@ class SANN():
     def iterate(self):
         print "T = " + str(self.T)
         curr_loss = self.current_arch.loss()
-        print self.current_arch
+        print "Current arch: " + str(self.current_arch)
         
         self.log_loss()
         self.log_acc()
@@ -97,6 +97,7 @@ class SANN():
 
         neighbors = self.get_nearest_neighbors()
         arch_prime = self.choose_neighbor(neighbors)
+        print "Prime now testing: " + str(arch_prime)
         loss_prime = arch_prime.loss()
 
         prob = self.prob_function(curr_loss, loss_prime, self.T)
@@ -120,6 +121,9 @@ class SANN():
         s = 0
         for el1, el2 in zip(arch1, arch2):
             if not el1 == el2:
+                print el1
+                print el2
+                print "\n"
                 s += 1
         return s
 
@@ -153,26 +157,10 @@ class SANN():
     
     
 if __name__ == '__main__':
-    good_params = {'convs': 2, 'channels': [4, 3], 'weight_init': 0.5, 'fcs': 3, 'lr': 0.006, 'bias_init': 0.1, 'filters': [11, 7], 'optimizer': tf.train.AdagradOptimizer, 'mo': 0.9, 'fc_dim': [128, 256, 64]}
-    #init_arch = Arch.make_arch([1e-4, .3, .05, .05, 2, 1, [32, 64], [5, 5], [512], tf.train.AdamOptimizer])
-    init_arch = Arch(good_params)
-    g = tf.Graph()
-    #data = AMTData('data/train.txt', 'data/test.txt', channels=3)
-    data = MNISTData() 
-    with g.as_default():
-        net = MNISTNet(init_arch, g)
-        loss, acc, _ = net.optimize(500, data, batch_size=100)
-        print "Loss: " + str(loss)
-        print "Accuracy: " + str(acc)
+    params1 = {'convs': 2, 'channels': [32, 64], 'weight_init': 0.1, 'fcs': 1, 'lr': 0.0001, 'bias_init': 0.5, 'filters': [5, 5], 'optimizer': tf.train.AdamOptimizer, 'mo': 0.09, 'fc_dim': [512]}
+    params2 = {'convs': 2, 'channels': [32, 64], 'weight_init': 0.1, 'fcs': 1, 'lr': 0.0001, 'bias_init': 0.5, 'filters': [5, 5], 'optimizer': tf.train.AdamOptimizer, 'mo': 0.09, 'fc_dim': [512]}
+    arch1 = Arch.make_arch(params1)
+    arch2 = Arch.make_arch(params2)
+    print SANN.hamming_dist(arch1, arch2)
     
     
-    
-    
-    #n = 1000
-    #s = SANN(init_arch, n)
-    #for i in range(n):
-    #    s.iterate()
-    """g = tf.Graph()
-    with g.as_default():
-        net = ControlNet(init_arch, g);
-    """

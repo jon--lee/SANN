@@ -33,7 +33,7 @@ class MNISTNet(GenericNet):
         
 
 
-    def optimize(self, iterations, data, path=None, batch_size=100, test_print=40, save=True):
+    def optimize(self, iterations, data, path=None, batch_size=300, test_print=40, save=True):
         if path:
             sess = self.load(var_path=path)
         else:
