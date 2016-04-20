@@ -13,8 +13,8 @@ class Arch():
 
     
     possible_values = {
-        "lr": sorted([.0009, .003, .006, .009, .03, .06, .09]),
-        "mo": sorted([.09, .5, .9]),
+        "lr": sorted([.0001, .0003, .0006, .001, .003, .006, .01]),
+        "mo": sorted([.01, .09, .5, .9]),
         "weight_init": sorted([.005, .05, .5]),
         "bias_init": sorted([0.01, 0.1, .5]),
         "convs": sorted([1, 2, 3, 4]),   

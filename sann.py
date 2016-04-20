@@ -25,7 +25,7 @@ class SANN():
         self.iterations = T
         self.T = .75
         self.dT = self.T/float(T)
-        self.max_hd = 2
+        self.max_hd = 1
         self.best = initial_arch
 
 
@@ -34,7 +34,8 @@ class SANN():
         if eprime < e:
             return 1
         else:
-            return np.exp(-(eprime - e)/T)
+            return 0
+            #return np.exp(-(eprime - e)/T)
 
 
     def choose_neighbor(self, neighbors):
@@ -145,7 +146,6 @@ class SANN():
         path = "best_loss.log"
         f = open(path, 'a+')
         f.write(str(self.best.loss()) + "\n")
-        return        
         return
     
 
