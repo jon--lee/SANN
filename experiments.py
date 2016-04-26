@@ -6,6 +6,7 @@ from arch import Arch
 import itertools
 import random
 import tensorflow as tf
+import clear_logs
 
 # note! don't try this, it takes too long (billions of permutations, likely hours to run)
 # it's cool as hell though
@@ -65,6 +66,7 @@ def permute_archs():
 
 
 if __name__ == '__main__':
+    clear_logs.clear()
     for _ in range(1):
         init_params = get_random_arch()
         """init_params = {
@@ -83,22 +85,23 @@ if __name__ == '__main__':
         }"""
         
         init_arch = Arch(init_params)
-        #print "initial loss: " + str(init_arch.loss())
 
-        #s = SANN(init_arch, T = 10)
+        s = SANN(init_arch, T = 10)
         hc = HillClimber(init_arch, 10)
         
-        #s.run()
+        s.run()
         hc.run()
+
+        
 
         print "\n\nFinal SANN Loss: " + str(s.best.loss())
         print "Final SANN Accuracy: " + str(s.best.acc())
         print "Final SANN: " + str(s.best)
 
-#        print "\n\nFinal HC loss: " + str(hc.best.loss())
-#        print "Final HC Accuracy: " + str(hc.best.acc())
-#        print "Final HC: " + str(hc.best)
+        print "\n\nFinal HC loss: " + str(hc.best.loss())
+        print "Final HC Accuracy: " + str(hc.best.acc())
+        print "Final HC: " + str(hc.best)
 
-
+        print "\n\nInitial loss: " + str(init_arch.loss())
 
     

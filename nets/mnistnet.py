@@ -90,6 +90,6 @@ class MNISTNet(GenericNet):
             self.log( "Optimization done." )
             return test_loss, test_accuracy, save_path
         else:
-            return 1e100, 0.0, None
+            return 1e50, 0.0, None
         
 

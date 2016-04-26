@@ -37,7 +37,7 @@ class SANN():
     def prob_function(e, eprime, T):
         if eprime < e:
             return 1
-        elif eprime > 1e5:
+        elif eprime > 1e40:
             return 0
         else:
             return np.exp(-(eprime - e)/T)
