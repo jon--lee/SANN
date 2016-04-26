@@ -3,9 +3,9 @@
     num_conv (int), num_fc (int), channels (list<int>), filters (list<int>), fc_dim (list<int>), optimizer (int) ]
 """
 import tensorflow as tf
-from controlnet import ControlNet
+from nets.controlnet import ControlNet
 from inputdata import MNISTData
-from mnistnet import MNISTNet
+from nets.mnistnet import MNISTNet
 class Arch():
 
     keys = ['lr', 'mo', 'weight_init', 'bias_init', 'convs',
@@ -78,7 +78,7 @@ class Arch():
         data = MNISTData()
         with g.as_default():
             net = MNISTNet(self, g)
-            loss, acc, path = net.optimize(700, data, batch_size=300, save=False)
+            loss, acc, path = net.optimize(20, data, batch_size=100, save=False)
             
         self._loss = loss
         self._acc = acc

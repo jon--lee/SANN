@@ -65,14 +65,8 @@ def permute_archs():
 
 
 if __name__ == '__main__':
-    #archs = permute_archs()
-    sann_losses = []
-    hc_losses = []
-    gs_losses = []
-    #print get_random_arch()
     for _ in range(1):
-        #init_arch = random.choice(archs)
-        #init_params = get_random_arch()
+        init_params = get_random_arch()
         """init_params = {
                 'convs': 2, 'channels': [3, 5], 
                 'weight_init': 0.5, 'fcs': 3, 'lr': 0.006,
@@ -80,26 +74,31 @@ if __name__ == '__main__':
                 'optimizer': tf.train.AdagradOptimizer, 
                 'mo': 0.5, 'fc_dim': [128, 256, 64]
         }"""
-        init_params = {
+        """init_params = {
                 'convs': 2, 'channels': [32, 64], 
                 'weight_init': 0.1, 'fcs': 1, 'lr': 0.0001,
                 'bias_init': 0.1, 'filters': [5, 5], 
                 'optimizer': tf.train.AdamOptimizer, 
                 'mo': 0.5, 'fc_dim': [512]
-        }
-        init_arch = Arch(init_params)
-        print "initial loss: " + str(init_arch.loss())
-
-        s = SANN(init_arch, T = 100)
-        #hc = HillClimber(init_arch, 80)
+        }"""
         
-        s.run()
-        #hc.run()
+        init_arch = Arch(init_params)
+        #print "initial loss: " + str(init_arch.loss())
+
+        #s = SANN(init_arch, T = 10)
+        hc = HillClimber(init_arch, 10)
+        
+        #s.run()
+        hc.run()
 
         print "\n\nFinal SANN Loss: " + str(s.best.loss())
         print "Final SANN Accuracy: " + str(s.best.acc())
         print "Final SANN: " + str(s.best)
-        #print "final hc: " + str(hc.best.loss())
+
+#        print "\n\nFinal HC loss: " + str(hc.best.loss())
+#        print "Final HC Accuracy: " + str(hc.best.acc())
+#        print "Final HC: " + str(hc.best)
+
 
 
     

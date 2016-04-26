@@ -98,13 +98,13 @@ class MNISTData():
 
 
     def next_validation_batch(self):
-        batch = self.mnist.validation.next_batch(200)
+        batch = self.mnist.validation.next_batch(100)
         inputs = batch[0]
         batch = (np.reshape(inputs, (100, 28, 28, 1)), batch[1])
         return batch    
 
     def next_test_batch(self):
-        batch = self.mnist.test.next_batch(400)
+        batch = self.mnist.test.next_batch(300)
         inputs = batch[0]
         batch = (np.reshape(inputs, (300, 28, 28, 1)), batch[1])
         return batch    

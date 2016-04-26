@@ -7,9 +7,13 @@ import tensorflow as tf
 class HillClimber(SANN):
 
     def __init__(self, initial_arch, T = 100):
-        self.iterations = T
-        self.current_arch = initial_arch
-        self.max_hd = 4;
+        SANN.__init__(self, initial_arch, T)
+
+        self.test_loss_path = "logs/test_loss_hc.log"
+        self.test_acc_path = "logs/test_acc_hc.log"
+        self.best_acc_path = "logs/best_acc_hc.log"
+        self.best_loss_path = "logs/best_loss_hc.log"
+
 
     def prob_function(self, e, eprime, T):
         if eprime < e:
@@ -17,17 +21,6 @@ class HillClimber(SANN):
         else:
             return 0
 
-    def iterate(self):
-        curr_loss = self.current_arch.loss()
-        
-        neighbors = self.get_nearest_neighbors()
-        arch_prime = self.choose_neighbor(neighbors)
-        loss_prime = arch_prime.loss()
-
-        prob = self.prob_function(curr_loss, loss_prime, 10)
-        if prob > random.random():
-            self.current_arch = arch_prime
-            self.best = arch_prime
         
 
 if __name__ == '__main__':

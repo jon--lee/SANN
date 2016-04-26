@@ -6,9 +6,9 @@
 
 """
 
-from tensornet import TensorNet
-from controlnet import ControlNet
-from mnistnet import MNISTNet
+from nets.tensornet import TensorNet
+from nets.controlnet import ControlNet
+from nets.mnistnet import MNISTNet
 from inputdata import MNISTData
 from arch import Arch
 from inputdata import AMTData
@@ -23,19 +23,24 @@ class SANN():
     def __init__(self, initial_arch, T = 100):
         self.current_arch = initial_arch
         self.iterations = T
-        self.T = .75
+        self.T = 1.0
         self.dT = self.T/float(T)
         self.max_hd = 2
         self.best = initial_arch
-
+        
+        self.best_acc_path = "logs/best_acc_sann.log"
+        self.best_loss_path = "logs/best_loss_sann.log"
+        self.test_loss_path = "logs/test_loss_sann.log"
+        self.test_acc_path = "logs/test_acc_sann.log"
 
     @staticmethod
     def prob_function(e, eprime, T):
         if eprime < e:
             return 1
-        else:
+        elif eprime > 1e5:
             return 0
-            #return np.exp(-(eprime - e)/T)
+        else:
+            return np.exp(-(eprime - e)/T)
 
 
     def choose_neighbor(self, neighbors):
@@ -49,7 +54,7 @@ class SANN():
         if hd == 0 or hd > self.max_hd:
             return self.get_nearest_neighbors()
         else:
-            print "hamming distance is: " + str(hd)
+            print "Hamming distance is: " + str(hd)
             return [neighbor]
 
 
@@ -86,9 +91,9 @@ class SANN():
 
 
     def iterate(self):
-        print "T = " + str(self.T)
+        print "[ Optimization Step ] T = " + str(self.T)
+        print "Current arch: " + str(self.current_arch)        
         curr_loss = self.current_arch.loss()
-        print "Current arch: " + str(self.current_arch)
         
         self.log_loss()
         self.log_acc()
@@ -121,34 +126,27 @@ class SANN():
         s = 0
         for el1, el2 in zip(arch1, arch2):
             if not el1 == el2:
-                print el1
-                print el2
-                print "\n"
                 s += 1
         return s
 
 
     def log_loss(self):
-        path = "test_loss.log"
-        f = open(path, 'a+')
+        f = open(self.test_loss_path, 'a+')
         f.write(str(self.current_arch.loss()) + "\n")
         return 
 
     def log_acc(self):
-        path = "test_acc.log"
-        f = open(path, 'a+')
+        f = open(self.test_acc_path, 'a+')
         f.write(str(self.current_arch.acc()) + "\n")
         return
 
     def log_best_acc(self):
-        path = "best_acc.log"
-        f = open(path, 'a+')
+        f = open(self.best_acc_path, 'a+')
         f.write(str(self.best.acc()) + "\n")
         return 
 
     def log_best_loss(self):
-        path = "best_loss.log"
-        f = open(path, 'a+')
+        f = open(self.best_loss_path, 'a+')
         f.write(str(self.best.loss()) + "\n")
         return
     
